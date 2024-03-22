@@ -16,8 +16,10 @@ const UserSchema = new Schema(
       default: "USER",
     },
   },
-  { timestamps: true }
+  { timestamps: true ,  versionKey: false  }
 );
+
+//timestamps added createdat and updatedat to DB
 
 const User = mongoose.model("User", UserSchema);
 
