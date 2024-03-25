@@ -3,9 +3,11 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path")
 
+// all routes here
 const authRouter = require("./routes/v1/auth");
 const userRouter = require("./routes/v1/user");
 
+// middlwares here
 const app = express();
 //The express.static() function is a built-in middleware function in Express.
 // It serves static files and is based on serve-static. 
@@ -24,7 +26,7 @@ app.use("/api/v1/user" , userRouter);
 
 
 app.use((error , req , res , next)=> {
-    res.status(error.status || 500).json({messg: error.message || "SERVER INTERNAL ERROR"})
-  })
+  res.status(error.status || 500).json({message: error.message || "SERVER INTERNAL ERROR"})
+})
 
 module.exports = app;
