@@ -1,12 +1,19 @@
+const BlockedUser = require("../../models/blocked-user");
 const User = require("../../models/user");
 const registerValidator = require("../../validators/register");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
-  //1. incoming request cant meet validator requirement
-  const registrationResult = registerValidator(req.body);
-  console.log(registrationResult, "registrationResult");
+
+  const blockedUser = await BlockedUser.findOne({phonenumber : req.body.phonenumber});
+  if(blockedUser) {
+    return res.status(400).json({message : "user is already blocked!"})
+  }
+
+   //1. incoming request cant meet validator requirement
+   const registrationResult = registerValidator(req.body);
+
   if (registrationResult !== true) {
     return res.status(429).json(registrationResult);
   }
