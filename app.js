@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const path = require("path")
+const path = require("path");
 
 // all routes here
 const authRouter = require("./routes/v1/auth");
@@ -26,6 +26,7 @@ app.use("/api/v1/user" , userRouter);
 
 
 app.use((error , req , res , next)=> {
+  console.log(error,'error')
   res.status(error.status || 500).json({message: error.message || "SERVER INTERNAL ERROR"})
 })
 
