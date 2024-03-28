@@ -1,7 +1,10 @@
 const BlockedUser = require("../../models/blocked-user");
 const User = require("../../models/user");
-const { ADMIN, USER } = require('../../constants/role');
+const { ADMIN, USER } = require("../../constants/role");
 const { isValidObjectId } = require("mongoose");
+const profileValidator = require("../../validators/profile");
+const jwt = require("jsonwebtoken");
+const {findUserId} = require("../../utils/user");
 
 const blockUser = async (req, res, next) => {
   const id = req.params.id;
@@ -20,13 +23,8 @@ const blockUser = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find({});
-    const filteredUsers = users.map((user) => {
-      const convertedUser = user.toObject();
-      delete convertedUser.password;
-      return convertedUser;
-    });
-    return res.status(200).json(filteredUsers);
+    const users = await User.find({}).select("-password");
+    return res.status(200).json(users);
   } catch (e) {
     next(e);
   }
@@ -77,9 +75,30 @@ const updateRole = async (req, res, next) => {
   }
 };
 
+const updateProfile = async (req, res, next) => {
+  try {
+    const isValidProfile = profileValidator(req.body);
+    if (isValidProfile !== true) {
+      return res.status(429).json(isValidProfile);
+    }
+    const userId = findUserId(req);
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        ...req.body,
+      },
+      { new: true }
+    ).select("-password");
+    return res.json(updatedUser);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   blockUser,
   getAllUsers,
   removeUser,
   updateRole,
+  updateProfile,
 };
