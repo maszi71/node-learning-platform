@@ -6,6 +6,7 @@ const path = require("path");
 // all routes here
 const authRouter = require("./routes/v1/auth");
 const userRouter = require("./routes/v1/user");
+const categoryRouter = require("./routes/v1/category");
 
 // middlwares here
 const app = express();
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user" , userRouter);
+app.use("/api/v1/category" , categoryRouter);
 
 
 app.use((error , req , res , next)=> {
