@@ -9,9 +9,9 @@ const courseSchema = new Schema(
     cover: { type: String, required: true },
     address: { type: String, required: true },
     support: { type: String, required: true },
-    price: { type: Number, required: true },
-    stutus: { type: String, required: true },
-    discount: { type: Number, required: true },
+    price: { type: String, required: true },
+    status: { type: String, required: true },
+    discount: { type: String, required: true },
     category: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
