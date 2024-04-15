@@ -1,23 +1,27 @@
 const multer = require("multer");
 const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "..", "public", "courses", "covers"));
-  },
-  filename: function (req, file, cb) {
-    console.log(file)
-    const validFormat = [".jpg", ".jpeg", ".png"];
-    const format = path.extname(file.originalname);
-    if (validFormat.includes(format)) {
-      const fileName = Date.now() + Math.random()
-            cb(null , `${fileName}${format}`)
-    } else {
-      cb(new Error("Format is not Valid"));
-    }
-  },
-});
-
-const uploader = multer({ storage: storage });
-
-module.exports = uploader;
+module.exports = (type,folderName , limitSize) => {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, "..", "public", "courses", folderName));
+    },
+    filename: function (req, file, cb) {
+      const format = path.extname(file.originalname);
+      const fileName = Date.now() + Math.random();
+      if(type ==="image") {
+        const validFormat = [".jpg", ".jpeg", ".png"];
+        if (validFormat.includes(format)) {
+                cb(null , `${fileName}${format}`)
+        } else {
+          cb(new Error("Format is not Valid"));
+        }
+      } else {
+        cb(null , `${fileName}${format}`)
+      }
+    },
+  });
+  return multer({ storage: storage , limits : {
+    fileSize : limitSize
+  } })
+};
